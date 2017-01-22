@@ -35,9 +35,16 @@ namespace prosest
             if(output == "PROSE") { Console.WriteLine("output is PROSE!"); }
             else { Console.WriteLine("output is NOT prose, shit's baroque");  }
 
+            var witnessFunctions = new WitnessFunctions(grammar);
+
+            var engine = new SynthesisEngine(grammar, new SynthesisEngine.Config
+            {
+                Strategies = new ISynthesisStrategy[] { new DeductiveSynthesis(witnessFunctions) }
+            });
+
             string desiredOutput = "PROSE";
             var spec = new ExampleSpec(new Dictionary<State, object> { [input] = desiredOutput });
-            var engine = new SynthesisEngine(grammar);
+            //var engine = new SynthesisEngine(grammar);
             ProgramSet learned = engine.LearnGrammar(spec);
             if (learned.Size > 0) { Console.WriteLine("POSITIVE LEARNED SIZE!"); }
             else { Console.WriteLine("LEARNED SIZE IS ZERO... :("); }
