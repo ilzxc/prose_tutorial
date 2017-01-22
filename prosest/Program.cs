@@ -32,7 +32,7 @@ namespace prosest
             // Execute the program on the input state.
             var output = (string)ast.Invoke(input);
             Console.WriteLine(output);
-            if(output == "PROSE") { Console.WriteLine("output is PROSE!"); }
+            if(output == "PROSE") { Console.WriteLine("output is " + output); }
             else { Console.WriteLine("output is NOT prose, shit's baroque");  }
 
             var witnessFunctions = new WitnessFunctions(grammar);
@@ -44,10 +44,16 @@ namespace prosest
 
             string desiredOutput = "PROSE";
             var spec = new ExampleSpec(new Dictionary<State, object> { [input] = desiredOutput });
-            //var engine = new SynthesisEngine(grammar);
-            ProgramSet learned = engine.LearnGrammar(spec);
-            if (learned.Size > 0) { Console.WriteLine("POSITIVE LEARNED SIZE!"); }
-            else { Console.WriteLine("LEARNED SIZE IS ZERO... :("); }
+            //ProgramSet learned = engine.LearnGrammar(spec);
+            var scoreFeature = new RankingScore(grammar);
+            //IEnumerable<ProgramNode> best = learned.TopK(scoreFeature, k: 1);
+            IEnumerable<ProgramNode> bestLearned = engine.LearnGrammarTopK(spec, scoreFeature, k: 10);
+            Console.WriteLine("Learned Size : " + bestLearned.Count());
+
+            ProgramNode p = bestLearned.First();
+            Console.WriteLine(p);
+            State input2 = State.Create(grammar.InputSymbol, "Program Synthesis");
+            Console.WriteLine(p.Invoke(input2));
 
             System.Threading.Thread.Sleep(5000);
         }

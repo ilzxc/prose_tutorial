@@ -1,9 +1,14 @@
 #reference 'file:prosest.Semantics.dll';
 #reference 'file:prosest.Learning.dll';
+using prosest;
+using prosest.Semantics;
+using prosest.Learning;
 using semantics prosest.Semantics.Semantics;
 using learners prosest.Learning.WitnessFunctions;
 
 language prosest;
+
+@complete feature double Score = RankingScore;
 
 @input string inp;
 
